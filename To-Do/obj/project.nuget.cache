@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "FyV/j/ahRMXwAPydHm9LLrXPY85TgBCR+RiSdTC7q2jzWBFadm62cqoHrCzi2dt0SedqhydJoJf/Dmkpv3S3CA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\marku\\source\\repos\\To-Do\\To-Do\\To-Do.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marku\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
