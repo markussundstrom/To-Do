@@ -1,10 +1,11 @@
-﻿namespace To_Do
+﻿using System.Diagnostics;
+
+namespace To_Do
 {
     public class Display
     {
         public string AppName { get; set; } = "";
         public string Context { get; set; } = "";
-        public string Message { get; set; } = "";
         public string Help { get; set; } = "";
 
 
@@ -40,19 +41,25 @@
             Console.CursorLeft = 0;
         }
 
-        public void RenderLists(List<TaskList> lists, int selected) 
+        public void RenderList(List<TaskList> lists, TaskList selected) 
         {
             Console.ResetColor();
-            for (int i = 0; i < lists.Count; i++)
+            foreach (var item in lists)
             {
-                if (selected == i)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                }
-                Console.WriteLine(lists[i].Title);
-                Console.ResetColor();
+                RenderItem(item, item == selected);
             }
+        }
+
+        private void RenderItem(TaskList list, bool selected)
+        {
+            Console.ResetColor();
+            if (selected)
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+            }
+            Console.WriteLine($"{list.Created}\t{list.Title}\t({list.Tasks.Count})");
+            Console.ResetColor();
         }
 
         public void RenderTasks(TaskList list, int selected)

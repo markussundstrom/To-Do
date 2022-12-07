@@ -5,9 +5,10 @@
         static void Main(string[] args)
         {
             TaskManager taskmanager = new TaskManager();
+            //            Ui ui = new Ui(taskmanager);
             Display display = new Display();
-            int selectedList = 0;
-            int selectedTask = 0;
+            TaskList? selectedList;
+            Task? selectedTask;
             int selectedSubtask = 0;
             int itemCount = 0;
             int state = (int)State.Lists;
@@ -23,16 +24,16 @@
                         itemCount = lists.Count;
                         if (itemCount == 0)
                         {
-                            selectedList = 0;
+                            selectedList = null;
                         }
-                        else if (selectedList >= itemCount)
+                        else if (!lists.Contains(selectedList))
                         {
-                            selectedList = itemCount - 1;
+                            selectedList = lists[0];
                         }
                         display.Context = "Tasklists";
                         display.Help = "Keys: q: quit, a: add list, x: delete list, <Enter>: view list, j/k: Change selection";
                         display.DrawScreen();
-                        display.RenderLists(lists, selectedList);
+                        display.RenderList(lists, selectedList);
                         break;
 
                     case (int)State.Tasks:
