@@ -7,9 +7,9 @@
             TaskManager taskmanager = new TaskManager();
             //            Ui ui = new Ui(taskmanager);
             Display display = new Display();
-            TaskList? selectedList;
-            Task? selectedTask;
-            int selectedSubtask = 0;
+            TaskList? selectedList = null;
+            Task? selectedTask  = null;
+            Subtask? selectedSubtask = null;
             int itemCount = 0;
             int state = (int)State.Lists;
             bool running = true;
@@ -37,38 +37,38 @@
                         break;
 
                     case (int)State.Tasks:
-                        TaskList list = taskmanager.GetTaskList(selectedList);
-                        itemCount = list.Tasks.Count;
+                        List<Task> tasks = selectedList.GetTaskList();
+                        itemCount = tasks.Count;
                         if (itemCount == 0)
                         {
-                            selectedTask = 0;
+                            selectedTask = null;
                         }
-                        else if (selectedTask >= itemCount)
+                        else if (!tasks.Contains(selectedTask))
                         {
-                            selectedTask = itemCount - 1;
+                            selectedTask = tasks[0];
                         }
-                        display.Context = $"Tasks in {list.Title}";
+                        display.Context = $"Tasks in {selectedList.Title}";
                         display.Help = "Keys: a: add task, x: delete task, t: edit list title, <Enter>: view list, j/k: Change selection, b: go back";
                         display.DrawScreen();
-                        display.RenderTasks(list, selectedTask);
+                        display.RenderList(tasks, selectedTask);
                         break;
 
                     case (int)State.Taskview:
-                        Task task = taskmanager.GetTask(selectedList, selectedTask);
-                        itemCount = task.Subtasks.Count;
+                        List<Subtask> subtasks = selectedTask.GetSubtaskList();
+                        itemCount = subtasks.Count;
                         if (itemCount == 0)
                         {
-                            selectedSubtask = 0;
+                            selectedSubtask = null;
                         }
-                        else if (selectedSubtask >= itemCount)
+                        else if (!subtasks.Contains(selectedSubtask))
                         {
-                            selectedSubtask = itemCount - 1;
+                            selectedSubtask = subtasks[0];
                         }
-                        display.Context = $"Viewing task \"{task.Title}\"";
+                        display.Context = $"Viewing task \"{selectedTask.Title}\"";
                         display.Help = "Keys: t: edit task title, c: toggle task complete, p: change priority, b: go back\n" +
                                         "a: add new subtask, x: delete subtask, C: toggle subtask complete";
                         display.DrawScreen();
-                        display.RenderTaskview(task, selectedSubtask);
+                        display.RenderTaskview(selectedTask, selectedSubtask);
                         break;
                 }
 

@@ -41,12 +41,12 @@ namespace To_Do
             Console.CursorLeft = 0;
         }
 
-        public void RenderList(List<TaskList> lists, TaskList selected) 
+        public void RenderList<T>(List<T> list, T selected) 
         {
             Console.ResetColor();
-            foreach (var item in lists)
+            foreach (var item in list)
             {
-                RenderItem(item, item == selected);
+                RenderItem((dynamic)item, item.Equals(selected));
             }
         }
 
@@ -60,6 +60,11 @@ namespace To_Do
             }
             Console.WriteLine($"{list.Created}\t{list.Title}\t({list.Tasks.Count})");
             Console.ResetColor();
+        }
+
+        private void RenderItem(Task task, bool selected)
+        {
+            Console.WriteLine("{0}{1}", task, selected);
         }
 
         public void RenderTasks(TaskList list, int selected)

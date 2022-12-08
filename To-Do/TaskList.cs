@@ -4,7 +4,7 @@
     {
         public string Title { get; set; }
         public List<Task> Tasks { get; set; }
-        public DateTime Created { get, private set; }
+        public DateTime Created { get; private set; }
 
         public TaskList()
         {
@@ -16,6 +16,12 @@
             Title = title;
             Tasks = tasks;
             Created = DateTime.Now;
+        }
+
+        public List<Task> GetTaskList()
+        {
+            List<Task> taskListCopy = Tasks.ToList();
+            return taskListCopy;
         }
 
         public void RemoveTask(Task task)

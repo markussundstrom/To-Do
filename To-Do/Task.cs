@@ -26,6 +26,12 @@
             Priority = priority;
         }
 
+        public List<Subtask> GetSubtaskList()
+        {
+            List<Subtask> subtaskListCopy = Subtasks.ToList();
+            return subtaskListCopy;
+        }
+
         public void SetPriority(int pri)
         {
             if (1 > pri || pri > 3)

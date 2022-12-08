@@ -19,17 +19,8 @@ namespace To_Do
 
         public List<TaskList> GetLists()
         {
-            return (List<TaskList>)_lists;
-        }
-
-        public TaskList GetTaskList(int listIndex)
-        {
-            return _lists[listIndex];
-        }
-
-        public Task GetTask(int listIndex, int taskIndex)
-        {
-            return _lists[listIndex].Tasks[taskIndex];
+            List<TaskList> listsCopy = _lists.ToList();
+            return listsCopy;
         }
 
         public void AddTaskList(string name)
