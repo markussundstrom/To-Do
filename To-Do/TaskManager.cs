@@ -25,12 +25,7 @@ namespace To_Do
 
         public void AddTaskList(string name)
         {
-            _lists.Add(new TaskList(name, new List<Task>()));
-        }
-
-        public void AddTask(string name, int listIndex)
-        {
-            _lists[listIndex].Tasks.Add(new Task(name, false));
+            _lists.Add(new TaskList(name));
         }
 
         public void AddSubtask(string name, int listIndex, int taskIndex)
@@ -38,19 +33,9 @@ namespace To_Do
             _lists[listIndex].Tasks[taskIndex].AddSubtask(name);
         }
 
-        public void DeleteTaskList(int listIndex)
+        public void DeleteTaskList(TaskList list)
         {
-            _lists.RemoveAt(listIndex);
-        }
-
-        public void DeleteTask(int listIndex, int taskIndex)
-        {
-            _lists[listIndex].Tasks.RemoveAt(taskIndex);
-        }
-
-        public void DeleteSubtask(int listIndex, int taskIndex, int subtaskIndex)
-        {
-            _lists[listIndex].Tasks[taskIndex].Subtasks.RemoveAt(subtaskIndex);
+            _lists.Remove(list);
         }
 
         public void SetListTitle(int listIndex, string newTitle)

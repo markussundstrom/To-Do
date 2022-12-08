@@ -6,15 +6,10 @@
         public List<Task> Tasks { get; set; }
         public DateTime Created { get; private set; }
 
-        public TaskList()
-        {
-
-        }
-
-        public TaskList(string title, List<Task> tasks)
+        public TaskList(string title)
         {
             Title = title;
-            Tasks = tasks;
+            Tasks = new List<Task>();
             Created = DateTime.Now;
         }
 
@@ -23,8 +18,13 @@
             List<Task> taskListCopy = Tasks.ToList();
             return taskListCopy;
         }
+        
+        public void AddTask(string name)
+        {
+            Tasks.Add(new Task(name));
+        }
 
-        public void RemoveTask(Task task)
+        public void DeleteTask(Task task)
         {
             Tasks.Remove(task);
         }

@@ -13,10 +13,10 @@
             Subtasks = new List<Subtask>();
         }
 
-        public Task(string title, bool completed)
+        public Task(string title)
         {
             Title = title;
-            Completed = completed;
+            Completed = false;
             Priority = 3;
             Subtasks = new List<Subtask>();
         }
@@ -54,6 +54,11 @@
         {
             Subtasks.Add(new Subtask(name));
             Completed = false;
+        }
+
+        public void DeleteSubtask(Subtask subtask)
+        {
+            Subtasks.Remove(subtask);
         }
 
         public void ToggleSubtaskCompleted(int subtaskIndex)
