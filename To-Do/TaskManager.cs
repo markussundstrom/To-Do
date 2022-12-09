@@ -48,11 +48,6 @@ namespace To_Do
             _lists[listIndex].Tasks[taskIndex].Title = newTitle;
         }
 
-        public void ToggleTaskComplete(int listIndex, int taskIndex)
-        {
-            _lists[listIndex].Tasks[taskIndex].ToggleCompleted();
-        }
-
         public void ToggleSubtaskComplete(int listIndex, int taskIndex, int subtaskIndex)
         {
             _lists[listIndex].Tasks[taskIndex].ToggleSubtaskCompleted(subtaskIndex);

@@ -52,7 +52,9 @@
 
         public void AddSubtask(string name)
         {
-            Subtasks.Add(new Subtask(name));
+            Subtask st = new Subtask(name);
+            st.CompletedChanged += SubtaskCompletedChanged;
+            Subtasks.Add(st);
             Completed = false;
         }
 
@@ -61,9 +63,8 @@
             Subtasks.Remove(subtask);
         }
 
-        public void ToggleSubtaskCompleted(int subtaskIndex)
+        private void SubtaskCompletedChanged(object sender, EventArgs e)
         {
-            Subtasks[subtaskIndex].Completed = !Subtasks[subtaskIndex].Completed;
             if (Subtasks.Any(st => !st.Completed))
             {
                 Completed = false;
@@ -73,6 +74,7 @@
                 Completed = true;
             }
         }
+
 
     }
 }

@@ -16,7 +16,7 @@
         private TaskList? _selectedList = null;
         private Task? _selectedTask = null;
         private Subtask? _selectedSubtask = null;
-        private List<dynamic> _currentList = new List<dynamic>;
+        private List<dynamic> _currentEnum = new List<dynamic>;
 
         public Ui(string appname, TaskManager taskmanager)
         {
@@ -39,12 +39,12 @@
 
                     case (int)State.Listview:
                         Listview();
-                        GetInput();
+                        ListviewGetInput();
                         break;
 
                     case (int)State.Taskview:
                         Taskview();
-                        GetInput();
+                        TaskviewGetInput();
                         break;
                 }
             }
@@ -52,20 +52,20 @@
 
         private void Overview()
         {
-            _currentList.Clear();
-            _currentList.AddRange(_taskman.GetLists());
-            if (_currentList.Count == 0)
+            _currentEnum.Clear();
+            _currentEnum.AddRange(_taskman.GetLists());
+            if (_currentEnum.Count == 0)
             {
                 _selectedList = null;
             }
-            else if (!_currentList.Contains(_selectedList))
+            else if (!_currentEnum.Contains(_selectedList))
             {
-                _selectedList = _currentList[0];
+                _selectedList = _currentEnum[0];
             }
             _display.Context = "Tasklists";
             _display.Help = "Keys: q: quit, a: add list, x: delete list, <Enter>: view list, j/k: Change selection";
             _display.DrawScreen();
-            _display.RenderList(_currentList, _selectedList);
+            _display.RenderList(_currentEnum, _selectedList);
         }
 
         private void Listview()
@@ -107,6 +107,14 @@
         {
             switch (Console.ReadKey(true).KeyChar)
             {
+                case 'q':
+                    _display.ShowMessage("Do you want to quit? (y/n)");
+                    if (GetConfirmation())
+                    {
+                        _running = false;
+                    }
+                    break;
+
                 case 'a':
                     _display.ShowMessage("Enter name of new list:");
                     string input = Console.ReadLine();
@@ -128,11 +136,15 @@
                 case (char)13:
                     if (_selectedList != null)
                     {
-                        state <<= 1;
+                        _state <<= 1;
                     }
                     break;
                 case 'k':
-                    _selectedList. = (_selectedList.Equals(_currentList[0]) ? _currentList[_currentList.Count - 1] : selectedList - 1;
+                    MoveSelection(ref _selectedList, -1);
+                    break;
+                case 'j':
+                    MoveSelection(ref _selectedList, 1);
+                    break;
             }
         }
 
@@ -158,16 +170,35 @@
                         }
                     }
                     break;
+
+                case 't':
+                    if (_selectedList != null)
+                    {
+                        EditTitle(_selectedList);
+                    }
+                    break;
+
                 case (char)13:
                     if (_selectedTask != null)
                     {
-                        state <<= 1;
+                        _state <<= 1;
                     }
+                    break;
+
+                case 'k':
+                    MoveSelection(ref _selectedTask, -1);
+                    break;
+
+                case 'j':
+                    MoveSelection(ref _selectedTask, 1);
+                    break;
+                case 'b':
+                    _state >>= 1;
                     break;
             }
         }
 
-        private void TaskViewGetInput()
+        private void TaskviewGetInput()
         {
             switch (Console.ReadKey(true).KeyChar)
             {
@@ -189,10 +220,61 @@
                         }
                     }
                     break;
+
+                case 'c':
+                    try
+                    {
+                        _selectedTask.ToggleCompleted();
+                    }
+                    catch
+                    {
+                        _display.ShowMessage("Unable to set task as completed, does it have subtasks? Press enter to continue.");
+                        Console.ReadLine();
+                    }
+                    break;
+
+                case 'C':
+                    if (_selectedSubtask != null)
+                    {
+                        _selectedSubtask.ToggleCompleted();
+                    }
+                    break;
+
+                case 'k':
+                    MoveSelection(ref _selectedSubtask, -1);
+                    break;
+
+                case 'j':
+                    MoveSelection(ref _selectedSubtask, 1);
+                    break;
+                case 'b':
+                    _state >>= 1;
+                    break;
+
+                case 'p':
+                    _display.ShowMessage("Enter new priority (1-3), leave empty to cancel:");
+                    while (true)
+                    {
+                        string prioInput = Console.ReadLine();
+                        if (String.IsNullOrEmpty(prioInput))
+                        {
+                        break;
+                        }
+                        try
+                        {
+                            _selectedTask.SetPriority(Int32.Parse(prioInput));
+                            break;
+                        }
+                        catch
+                        {
+                            _display.ShowMessage("Priority needs to be within range 1-3");
+                        }
+                    }
+                    break;
             }
         }
 
-        public bool GetConfirmation()
+        private bool GetConfirmation()
         {
             while (true)
             {
@@ -204,6 +286,35 @@
                 else if (choice == 'n')
                 {
                     return false;
+                }
+            }
+        }
+
+        private void MoveSelection<T>(ref T selection, int direction)
+        {
+            if (selection == null)
+            {
+                return;
+            }
+            int index = _currentEnum.IndexOf(selection);
+            index += direction;
+            index = ((index % _currentEnum.Count) + _currentEnum.Count) % _currentEnum.Count;
+            selection = _currentEnum[index];
+        }
+
+        private void EditTitle<T>(T selected)
+        {
+            _display.ShowMessage($"Enter new title of item. Leave empty to cancel edit");
+            string titleInput = Console.ReadLine();
+            if (!String.IsNullOrEmpty(titleInput))
+            {
+                _display.ShowMessage($"Change title of item to {titleInput}? (y/n)");
+                if (GetConfirmation())
+                {
+                    selected.SetTitle()
+                    {
+                        taskmanager.SetTaskTitle(selectedList, selectedTask, titleInput);
+                    }
                 }
             }
         }
